@@ -27,5 +27,5 @@ import cn.inksay.xiaowine.utils.Utils
 
 object XposedOwnSP {
     @JvmStatic
-    val config: Config by lazy { Config(Utils.getPref("LikSay_Config")) }
+    val config: Config by lazy { Config(Utils.getPref("InkSay_Config")) }
 }

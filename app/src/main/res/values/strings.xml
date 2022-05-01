@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">Lik Say</string>
-    <string name="xposed_desc">Lik Say</string>
+    <string name="app_name">墨•言</string>
+    <string name="xposed_desc">墨•言</string>
+    <string name="Tips">提示</string>
+    <string name="NotSupport">本模块未激活，请在 LSPosed 内激活本模块\n本模块仅支持最新版 LSPosed</string>
+    <string name="ReStart">重启 App</string>
 </resources>

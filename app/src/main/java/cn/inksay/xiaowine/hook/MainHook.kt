@@ -10,7 +10,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 
 private const val PACKAGE_NAME_HOOKED = "com.android.systemui"
-private const val TAG = "LikSay"
+private const val TAG = "InkSay"
 
 class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit /* Optional */ {
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {

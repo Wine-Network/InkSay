@@ -19,9 +19,16 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-optimizationpasses 5
 
 -keep public class cn.inksay.xiaowine.hook.MainHook
 
 -keep class cn.inksay.xiaowine.hook.MainHook {
      <init>();
 }
+
+
+-repackageclasses "截图看NM日志"
+-obfuscationdictionary dict.txt
+-classobfuscationdictionary dict.txt
+-packageobfuscationdictionary dict.txt

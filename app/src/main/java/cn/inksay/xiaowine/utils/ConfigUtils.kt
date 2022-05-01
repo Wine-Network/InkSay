@@ -44,7 +44,7 @@ class ConfigUtils {
 
     fun update() {
         if (xSP == null) {
-            xSP = Utils.getPref("LikSay_Config")
+            xSP = Utils.getPref("InkSay_Config")
             mSP = xSP
             return
         }

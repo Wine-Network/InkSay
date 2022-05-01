@@ -28,14 +28,13 @@ import android.os.Looper
 import android.util.Log
 import android.widget.Toast
 import de.robv.android.xposed.XposedBridge
-import cn.inksay.xiaowine.utils.ActivityOwnSP.config
 
 //import cn.inksay.xiaowine.utils.XposedOwnSP.config
 
 object LogUtils {
     private const val maxLength = 4000
     private val handler by lazy { Handler(Looper.getMainLooper()) }
-    private const val TAG = "LikSay"
+    private const val TAG = "InkSay"
 
     @JvmStatic
     fun toast(context: Context?, msg: String) {

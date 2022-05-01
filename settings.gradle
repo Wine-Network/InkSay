@@ -9,5 +9,7 @@ dependencyResolutionManagement {
 }
 
 include ':app'
+include ':xtoast'
+include ':blockmiui'
 rootProject.name = "LikSay"
 
