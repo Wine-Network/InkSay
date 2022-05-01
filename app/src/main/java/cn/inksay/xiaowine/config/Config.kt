@@ -54,12 +54,13 @@ class Config {
     }
 
     fun getSwitch(): Boolean {
-        return config.optBoolean("IsToast", true)
+        return config.optBoolean("Switch", false)
     }
 
     fun setSwitch(b: Boolean) {
-        return config.put("IsToast", b)
+        return config.put("Switch", b)
     }
+
     fun getUpdateInterval(): Int {
         return config.optInt("UpdateInterval", 60)
     }

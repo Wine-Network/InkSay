@@ -27,7 +27,7 @@ class SettingActivity : MIUIActivity() {
         }
         initView {
             registerMain(getString(R.string.App_name), false) {
-                TextWithSwitch(TextV(resId = R.string.Switch), SwitchV("Switch", true))
+                TextWithSwitch(TextV(resId = R.string.Switch), SwitchV("Switch", false))
                 TextSummaryArrow(TextSummaryV(textId = R.string.update, onClickListener = {
                     activity.sendBroadcast(Intent().apply { action = "InkSay_Server" })
                 }))
@@ -40,7 +40,7 @@ class SettingActivity : MIUIActivity() {
                             if (getEditText().isNotEmpty()) {
                                 try {
                                     val value = getEditText().toInt()
-                                    if (value in (1..1440)) {
+                                    if (value in (0..1440)) {
                                         ActivityOwnSP.ownSPConfig.setUpdateInterval(value)
                                         updateConfig = true
                                         dismiss()
@@ -57,7 +57,7 @@ class SettingActivity : MIUIActivity() {
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 })
-                SeekBarWithText("UpdateInterval", 1, 1440, defaultProgress = 60)
+                SeekBarWithText("UpdateInterval", 0, 1440, defaultProgress = 60)
                 Line()
 //                TextWithSwitch(TextV(resId = R.string.IsToast), SwitchV("IsToast", true))
                 TextWithSwitch(TextV(resId = R.string.HideDeskIcon), SwitchV("HLauncherIcon", customOnCheckedChangeListener = {
@@ -98,7 +98,7 @@ class SettingActivity : MIUIActivity() {
                 TextV()
             }
 
-            registerMenu(getString(R.string.Menu)) {}
+//            registerMenu(getString(R.string.Menu)) {}
         }
     }
 
