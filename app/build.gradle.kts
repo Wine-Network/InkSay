@@ -24,13 +24,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            setProguardFiles(
-                listOf(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    "proguard-rules.pro",
-                    "proguard-log.pro"
-                )
-            )
+            setProguardFiles(listOf(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro", "proguard-log.pro"))
         }
     }
     compileOptions {
@@ -56,8 +50,7 @@ android {
     }
     applicationVariants.all {
         outputs.all {
-            (this as BaseVariantOutputImpl).outputFileName =
-                "Ink Say-$versionName($versionCode)-$name.apk"
+            (this as BaseVariantOutputImpl).outputFileName = "Ink Say-$versionName($versionCode)-$name.apk"
         }
     }
 }

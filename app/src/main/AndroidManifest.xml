@@ -24,7 +24,10 @@
                 android:value="@string/xposed_desc"/>
         <meta-data
                 android:name="xposedminversion"
-                android:value="54"/> <!-- xposed-scope here -->
+                android:value="93"/> <!-- xposed-scope here -->
+        <meta-data
+                android:name="xposedsharedprefs"
+                android:value="true"/>
         <meta-data
                 android:name="xposedscope"
                 android:resource="@array/xposedscope"/>
