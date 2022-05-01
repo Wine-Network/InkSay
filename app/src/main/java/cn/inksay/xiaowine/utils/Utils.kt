@@ -3,31 +3,28 @@ package cn.inksay.xiaowine.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
+import app.xiaowine.xtoast.XToast
 import cn.inksay.xiaowine.BuildConfig
 import de.robv.android.xposed.XSharedPreferences
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.URL
 import java.util.*
 
 object Utils {
     val isMiui: Boolean = isPresent("android.provider.MiuiSettings")
 
-    fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
 
-    fun getHttp(Url: String): String? {
+    @Suppress("DEPRECATION") fun showToast(context: Context, message: String) {
         try {
-            val connection = URL(Url).openConnection() as java.net.HttpURLConnection
-            connection.requestMethod = "GET"
-            connection.connectTimeout = 5000
-            val reader = BufferedReader(InputStreamReader(connection.inputStream))
-            return reader.readLine()
-        } catch (e: Exception) {
+            handler.post { XToast.makeText(context, ">墨•言：${message}").show() }
+        } catch (e: RuntimeException) {
             e.printStackTrace()
         }
-        return null
     }
+
+    fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
     // 判断class是否存在
     private fun isPresent(name: String): Boolean {
@@ -39,6 +36,17 @@ object Utils {
         }
     }
 
+    fun Any?.isNull(callback: () -> Unit) {
+        if (this == null) callback()
+    }
+
+    fun Any?.isNotNull(callback: () -> Unit) {
+        if (this != null) callback()
+    }
+
+    fun Any?.isNull() = this == null
+
+    fun Any?.isNotNull() = this != null
 
     @SuppressLint("WorldReadableFiles") @Suppress("DEPRECATION")
     fun getSP(context: Context, key: String?): SharedPreferences? {

@@ -46,11 +46,18 @@ class Config {
     }
 
     fun getDebug(): Boolean {
-        return config.optBoolean("Debug", true)
+        return config.optBoolean("Debug", false)
     }
 
     fun setDebug(b: Boolean) {
         return config.put("Debug", b)
+    }
+    fun getIsToast(): Boolean {
+        return config.optBoolean("IsToast", true)
+    }
+
+    fun setIsToast(b: Boolean) {
+        return config.put("IsToast", b)
     }
 
 }

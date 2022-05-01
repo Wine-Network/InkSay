@@ -1,6 +1,7 @@
 package cn.inksay.xiaowine.hook
 
 import cn.inksay.xiaowine.hook.app.SystemUI
+import cn.inksay.xiaowine.utils.LogUtils
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.Log
 import com.github.kyuubiran.ezxhelper.utils.Log.logexIfThrow
@@ -34,7 +35,7 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit /* Optional */ {
                 if (it.isInit) return@forEach
                 it.init()
                 it.isInit = true
-                Log.i("Inited hook: ${it.javaClass.simpleName}")
+                LogUtils.i("Inited hook: ${it.javaClass.simpleName}")
             }.logexIfThrow("Failed init hook: ${it.javaClass.simpleName}")
         }
     }

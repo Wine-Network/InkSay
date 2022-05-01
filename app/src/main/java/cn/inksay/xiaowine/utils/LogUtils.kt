@@ -33,13 +33,8 @@ import de.robv.android.xposed.XposedBridge
 
 object LogUtils {
     private const val maxLength = 4000
-    private val handler by lazy { Handler(Looper.getMainLooper()) }
     private const val TAG = "InkSay"
 
-    @JvmStatic
-    fun toast(context: Context?, msg: String) {
-        handler.post { Toast.makeText(context, msg, Toast.LENGTH_SHORT).show() }
-    }
 
     @JvmStatic
     fun log(obj: Any?, toXposed: Boolean = false, toLogd: Boolean = false) {
@@ -51,19 +46,19 @@ object LogUtils {
                 val max = 4000 * (i + 1)
                 if (max >= content.length) {
                     if (toXposed) XposedBridge.log("$TAG: " + content.substring(maxLength * i))
-                    if (toLogd) Log.d(TAG, content.substring(maxLength * i))
+                    if (toLogd) Log.i(TAG, content.substring(maxLength * i))
                 } else {
                     if (toXposed) XposedBridge.log("$TAG: " + content.substring(maxLength * i, max))
-                    if (toLogd) Log.d(TAG, content.substring(maxLength * i, max))
+                    if (toLogd) Log.i(TAG, content.substring(maxLength * i, max))
                 }
             }
         } else {
             if (toXposed) XposedBridge.log("$TAG: $content")
-            if (toLogd) Log.d(TAG, content)
+            if (toLogd) Log.i(TAG, content)
         }
     }
 
-    fun e(obj: Any?) {
+    fun i(obj: Any?) {
         log(obj, toXposed = true)
     }
 
