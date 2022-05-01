@@ -31,7 +31,7 @@ object SystemUI : BaseHook() {
     @SuppressLint("StaticFieldLeak") var textView: TextView? = null
     private var context: Context? = null
     private var updateTextHandler: Handler? = null
-    val waitUpate = false
+    private var waitUpate = false
 
     @SuppressLint("SetTextI18n") override fun init() {
         val inkSayReceiver by lazy { InkSayReceiver() }
@@ -93,6 +93,8 @@ object SystemUI : BaseHook() {
     fun getDateUpdate() {
         if (!waitUpate) {
             return
+        } else {
+            waitUpate = true
         }
         Thread {
             textView.isNull {
