@@ -78,7 +78,7 @@ object SystemUI : BaseHook() {
             LogUtils.i("")
             getDateUpdate()
         }
-        startTimer(60 * 20 * 1000, getUpdateDateTimer())
+        startTimer(((config.getUpdateInterval() * 1000).toLong()), getUpdateDateTimer())
 
     }
 
