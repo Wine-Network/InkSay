@@ -8,21 +8,12 @@ import android.os.Looper
 import android.util.TypedValue
 import app.xiaowine.xtoast.XToast
 import cn.inksay.xiaowine.BuildConfig
+import cn.inksay.xiaowine.R
 import de.robv.android.xposed.XSharedPreferences
 import java.util.*
 
 object Utils {
     val isMiui: Boolean = isPresent("android.provider.MiuiSettings")
-
-    private val handler by lazy { Handler(Looper.getMainLooper()) }
-
-    @Suppress("DEPRECATION") fun showToast(context: Context, message: String) {
-        try {
-            handler.post { XToast.makeText(context, ">墨•言：${message}").show() }
-        } catch (e: RuntimeException) {
-            e.printStackTrace()
-        }
-    }
 
     fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 

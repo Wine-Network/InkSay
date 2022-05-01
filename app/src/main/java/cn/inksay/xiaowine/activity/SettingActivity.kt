@@ -27,8 +27,39 @@ class SettingActivity : MIUIActivity() {
         }
         initView {
             registerMain(getString(R.string.App_name), false) {
-                TextSummaryArrow(TextSummaryV(textId = R.string.update))
-                TextWithSwitch(TextV(resId = R.string.IsToast), SwitchV("IsToast", true))
+                TextWithSwitch(TextV(resId = R.string.Switch), SwitchV("Switch", true))
+                TextSummaryArrow(TextSummaryV(textId = R.string.update, onClickListener = {
+                    activity.sendBroadcast(Intent().apply { action = "InkSay_Server" })
+                }))
+                Text(resId = R.string.UpdateInterval, onClickListener = {
+                    MIUIDialog(activity) {
+                        setTitle(R.string.UpdateInterval)
+                        setMessage(R.string.UpdateIntervalTips)
+                        setEditText(ActivityOwnSP.ownSPConfig.getUpdateInterval().toString(), "60")
+                        setRButton(R.string.Ok) {
+                            if (getEditText().isNotEmpty()) {
+                                try {
+                                    val value = getEditText().toInt()
+                                    if (value in (1..1440)) {
+                                        ActivityOwnSP.ownSPConfig.setUpdateInterval(value)
+                                        updateConfig = true
+                                        dismiss()
+                                        return@setRButton
+                                    }
+                                } catch (_: Throwable) {
+                                }
+                            }
+                            ActivityUtils.showToast(activity, getString(R.string.InputError))
+                            ActivityOwnSP.ownSPConfig.setUpdateInterval(60)
+                            updateConfig = true
+                            dismiss()
+                        }
+                        setLButton(R.string.Cancel) { dismiss() }
+                    }.show()
+                })
+                SeekBarWithText("UpdateInterval", 1, 1440, defaultProgress = 60)
+                Line()
+//                TextWithSwitch(TextV(resId = R.string.IsToast), SwitchV("IsToast", true))
                 TextWithSwitch(TextV(resId = R.string.HideDeskIcon), SwitchV("HLauncherIcon", customOnCheckedChangeListener = {
                     packageManager.setComponentEnabledSetting(ComponentName(activity, "${BuildConfig.APPLICATION_ID}.launcher"), if (it) {
                         PackageManager.COMPONENT_ENABLED_STATE_DISABLED
@@ -37,7 +68,7 @@ class SettingActivity : MIUIActivity() {
                     }, PackageManager.DONT_KILL_APP)
                 }))
                 TextWithSwitch(TextV(resId = R.string.DebugMode), SwitchV("Debug"))
-                TextWithSwitch(TextV(text = "App Center"), SwitchV("AppCenter", true))
+
                 TextSummaryArrow(TextSummaryV(textId = R.string.ResetModule, onClickListener = {
                     MIUIDialog(activity) {
                         setTitle(R.string.ResetModuleDialog)

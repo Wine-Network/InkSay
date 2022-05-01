@@ -52,12 +52,20 @@ class Config {
     fun setDebug(b: Boolean) {
         return config.put("Debug", b)
     }
-    fun getIsToast(): Boolean {
+
+    fun getSwitch(): Boolean {
         return config.optBoolean("IsToast", true)
     }
 
-    fun setIsToast(b: Boolean) {
+    fun setSwitch(b: Boolean) {
         return config.put("IsToast", b)
+    }
+    fun getUpdateInterval(): Int {
+        return config.optInt("UpdateInterval", 60)
+    }
+
+    fun setUpdateInterval(i: Int) {
+        return config.put("UpdateInterval", i)
     }
 
 }

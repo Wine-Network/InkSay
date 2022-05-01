@@ -6,6 +6,7 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/App_name"
             android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/AppTheme"
             tools:ignore="AllowBackup">
 
         <activity
@@ -45,9 +46,6 @@
             </intent-filter>
         </service>
 
-        <meta-data
-                android:name="xposedmodule"
-                android:value="true"/>
         <meta-data
                 android:name="xposeddescription"
                 android:value="@string/Xposed_desc"/>

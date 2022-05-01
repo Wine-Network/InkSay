@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,7 +17,6 @@ import cn.inksay.xiaowine.hook.BaseHook
 import cn.inksay.xiaowine.utils.ActivityUtils
 import cn.inksay.xiaowine.utils.LogUtils
 import cn.inksay.xiaowine.utils.Utils
-import cn.inksay.xiaowine.utils.Utils.isNotNull
 import cn.inksay.xiaowine.utils.XposedOwnSP.config
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
@@ -41,6 +41,9 @@ object SystemUI : BaseHook() {
             LogUtils.i("本设备非MIUI")
             LogUtils.i("本模块仅支持MIUI")
         }
+        if (!config.getSwitch()) {
+            LogUtils.i("总开关未打开")
+        }
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             LogUtils.i("初始化View")
             val viewGroup = methodHookParam.thisObject as ViewGroup
@@ -52,7 +55,8 @@ object SystemUI : BaseHook() {
             textView = TextView(context).apply {
                 text = "test" //setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 textSize = 15f
-                paint.isFakeBoldText = true
+                setTextColor(Color.WHITE)
+//                paint.isFakeBoldText = true
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, Utils.dp2px(context, 15f), 0, 0) }
                 //                layoutParams = dateTime.layoutParams
 //                try {
@@ -88,9 +92,6 @@ object SystemUI : BaseHook() {
             val request = ActivityUtils.getHttp("https://v1.hitokoto.cn/?encode=text")
             if (request == null) {
                 LogUtils.i("获取失败")
-                context.isNotNull {
-                    if (config.getIsToast()) Utils.showToast(context!!, "获取失败")
-                }
             } else {
                 LogUtils.i("发送更新")
                 updateText.sendMessage(updateText.obtainMessage().also {
@@ -102,11 +103,9 @@ object SystemUI : BaseHook() {
 
     class InkSayReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            if (config.getIsToast()) Utils.showToast(context, "开始更新")
             getDateUpdate()
         }
     }
-
 
 
     private var updateDateTimer: TimerTask? = null

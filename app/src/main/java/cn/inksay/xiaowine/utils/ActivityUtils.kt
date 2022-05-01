@@ -42,6 +42,8 @@ import java.io.InputStreamReader
 import java.net.URL
 
 object ActivityUtils {
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
+
     fun voidShell(command: String, isSu: Boolean) {
         try {
             if (isSu) {
@@ -62,8 +64,18 @@ object ActivityUtils {
     //清除配置
     fun cleanConfig(activity: Activity) {
         ActivityOwnSP.ownSPConfig.clear()
-        Utils.showToast(activity, activity.getString(R.string.ResetSuccess))
+        showToast(activity, activity.getString(R.string.ResetSuccess))
         activity.finishActivity(0)
+    }
+
+    @Suppress("DEPRECATION") fun showToast(context: Context, message: String) {
+        try {
+            handler.post {
+                XToast.makeText(context, ">墨•言：${message}", toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+            }
+        } catch (e: RuntimeException) {
+            e.printStackTrace()
+        }
     }
 
     //检查更新
@@ -82,17 +94,17 @@ object ActivityUtils {
                                 val intent = Intent(Intent.ACTION_VIEW, uri)
                                 activity.startActivity(intent)
                             } catch (e: JSONException) {
-                                Utils.showToast(activity, activity.getString(R.string.GetNewVerError) + e)
+                                showToast(activity, activity.getString(R.string.GetNewVerError) + e)
                             }
                             dismiss()
                         }
                         setLButton(R.string.Cancel) { dismiss() }
                     }.show()
                 } else {
-                    Utils.showToast(activity, activity.getString(R.string.NoVerUpdate))
+                   showToast(activity, activity.getString(R.string.NoVerUpdate))
                 }
             } catch (ignored: JSONException) {
-                Utils.showToast(activity, activity.getString(R.string.CheckUpdateError))
+                showToast(activity, activity.getString(R.string.CheckUpdateError))
             }
 
             true
@@ -107,7 +119,7 @@ object ActivityUtils {
                     handler.sendMessage(it)
                 }
             } else {
-                Utils.showToast(activity, activity.getString(R.string.CheckUpdateFailed))
+                showToast(activity, activity.getString(R.string.CheckUpdateFailed))
             }
         }.start()
     }
