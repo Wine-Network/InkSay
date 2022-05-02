@@ -3,13 +3,12 @@ package cn.inksay.xiaowine.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.os.Handler
-import android.os.Looper
 import android.util.TypedValue
-import app.xiaowine.xtoast.XToast
 import cn.inksay.xiaowine.BuildConfig
-import cn.inksay.xiaowine.R
 import de.robv.android.xposed.XSharedPreferences
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
 import java.util.*
 
 object Utils {
@@ -17,6 +16,23 @@ object Utils {
 
     fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
+
+    fun getDate(): String {
+       return returnShell("getprop ro.build.date.utc")
+    }
+    fun getIncremental(): String {
+       return returnShell("getprop ro.build.version.incremental")
+    }
+    private fun returnShell(command: String): String {
+        try {
+            val bufferedReader = BufferedReader(InputStreamReader(Runtime.getRuntime().exec(command).inputStream), 1024)
+            val buffer: String = bufferedReader.readLine()
+            bufferedReader.close()
+            return buffer
+        } catch (ignored: IOException) {
+        }
+        return ""
+    }
     // 判断class是否存在
     private fun isPresent(name: String): Boolean {
         return try {

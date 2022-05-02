@@ -23,7 +23,6 @@ import cn.inksay.xiaowine.utils.XposedOwnSP.config
 import com.github.kyuubiran.ezxhelper.utils.findMethod
 import com.github.kyuubiran.ezxhelper.utils.hookAfter
 import java.util.*
-import cn.inksay.xiaowine.utils.SystemProperties
 
 @SuppressLint("StaticFieldLeak")
 object SystemUI : BaseHook() {
@@ -52,13 +51,18 @@ object SystemUI : BaseHook() {
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val viewGroup = methodHookParam.thisObject as ViewGroup
             context = viewGroup.context
-            if (SystemProperties[context!!, "ro.build.date.utc"].toInt() >= 1647014400 && !SystemProperties[context!!, "ro.build.version.incremental"].endsWith("DEV") && !SystemProperties[context!!, "ro.build.version.incremental"].endsWith("XM")) return@hookAfter
+            LogUtils.i(Utils.getDate())
+            if (Utils.getDate().toInt() >= 1647014400 &&
+                !Utils.getIncremental().endsWith("DEV") &&
+                !Utils.getIncremental().endsWith("XM")) return@hookAfter
             init(context!!, viewGroup)
         }
         findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val viewGroup = methodHookParam.thisObject as ViewGroup
             context = viewGroup.context
-            if (!(SystemProperties[context!!, "ro.build.date.utc"].toInt() >= 1647014400 && !SystemProperties[context!!, "ro.build.version.incremental"].endsWith("DEV") && !SystemProperties[context!!, "ro.build.version.incremental"].endsWith("XM"))) return@hookAfter
+            if (!(Utils.getDate().toInt() >= 1647014400 &&
+                        !Utils.getIncremental().endsWith("DEV") &&
+                        !Utils.getIncremental().endsWith("XM"))) return@hookAfter
             val bigTimeId = context!!.resources.getIdentifier("big_time", "id", context!!.packageName)
             val bigTime: TextView = viewGroup.findViewById(bigTimeId)
             val dateTimeId = context!!.resources.getIdentifier("date_time", "id", context!!.packageName)
