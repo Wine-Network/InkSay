@@ -17,6 +17,9 @@ object Utils {
     fun dp2px(context: Context, dpValue: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.resources.displayMetrics).toInt()
 
 
+    fun isNew(): Boolean {
+       return getDate().toInt() >= 1647014400 && !getIncremental().endsWith("DEV") && !getIncremental().endsWith("XM")
+    }
     fun getDate(): String {
        return returnShell("getprop ro.build.date.utc")
     }

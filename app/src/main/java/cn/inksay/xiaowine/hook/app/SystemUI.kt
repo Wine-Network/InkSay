@@ -17,6 +17,7 @@ import cn.inksay.xiaowine.hook.BaseHook
 import cn.inksay.xiaowine.utils.ActivityUtils
 import cn.inksay.xiaowine.utils.LogUtils
 import cn.inksay.xiaowine.utils.Utils
+import cn.inksay.xiaowine.utils.Utils.isNew
 import cn.inksay.xiaowine.utils.Utils.isNotNull
 import cn.inksay.xiaowine.utils.Utils.isNull
 import cn.inksay.xiaowine.utils.XposedOwnSP.config
@@ -51,24 +52,21 @@ object SystemUI : BaseHook() {
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val viewGroup = methodHookParam.thisObject as ViewGroup
             context = viewGroup.context
-            LogUtils.i(Utils.getDate())
-            if (Utils.getDate().toInt() >= 1647014400 && !Utils.getIncremental().endsWith("DEV") && !Utils.getIncremental().endsWith("XM")) return@hookAfter
-            init(context!!, viewGroup)
+            init(context!!,viewGroup)
         }
-        findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
+        findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val viewGroup = methodHookParam.thisObject as ViewGroup
             context = viewGroup.context
-            if (!(Utils.getDate().toInt() >= 1647014400 && !Utils.getIncremental().endsWith("DEV") && !Utils.getIncremental().endsWith("XM"))) return@hookAfter
-            val bigTimeId = context!!.resources.getIdentifier("big_time", "id", context!!.packageName)
-            val bigTime: TextView = viewGroup.findViewById(bigTimeId)
-            val dateTimeId = context!!.resources.getIdentifier("date_time", "id", context!!.packageName)
-            val dateTime: TextView = viewGroup.findViewById(dateTimeId)
-            viewGroup.removeView(bigTime)
-            viewGroup.removeView(dateTime)
-            init(context!!, viewGroup)
-            viewGroup.addView(bigTime)
-            viewGroup.addView(dateTime)
+            init(context!!,viewGroup)
         }
+        if (isNew()){
+            findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
+                val viewGroup = methodHookParam.thisObject as ViewGroup
+                context = viewGroup.context
+                init(context!!,viewGroup)
+            }
+        }
+
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "updateLayout" }.hookAfter {
             if (context.isNotNull() && textView.isNotNull()) {
                 LogUtils.i(context!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -80,6 +78,22 @@ object SystemUI : BaseHook() {
             LogUtils.i(config.getUpdateInterval() * 1000)
             Timer().scheduleAtFixedRate(UpdateTask(), 0, (config.getUpdateInterval() * 1000).toLong())
             println("其他任务")
+        }
+    }
+
+    fun initView(context: Context, viewGroup: ViewGroup) {
+        if (!(Utils.getDate().toInt() >= 1647014400 && !Utils.getIncremental().endsWith("DEV") && !Utils.getIncremental().endsWith("XM"))) {
+            val bigTimeId = context.resources.getIdentifier("big_time", "id", context.packageName)
+            val bigTime: TextView = viewGroup.findViewById(bigTimeId)
+            val dateTimeId = context.resources.getIdentifier("date_time", "id", context.packageName)
+            val dateTime: TextView = viewGroup.findViewById(dateTimeId)
+            viewGroup.removeView(bigTime)
+            viewGroup.removeView(dateTime)
+            init(context, viewGroup)
+            viewGroup.addView(bigTime)
+            viewGroup.addView(dateTime)
+        } else {
+            init(context, viewGroup)
         }
     }
 
