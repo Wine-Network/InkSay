@@ -50,11 +50,11 @@ object SystemUI : BaseHook() {
             return
         }
 
-//        findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
-//            val viewGroup = methodHookParam.thisObject as ViewGroup
-//            context = viewGroup.context
-//            init(context!!,viewGroup)
-//        }
+        findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
+            val viewGroup = methodHookParam.thisObject as ViewGroup
+            context = viewGroup.context
+            init(context!!,viewGroup)
+        }
         if (isNew()) {
             findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
                 val viewGroup = methodHookParam.thisObject as ViewGroup
