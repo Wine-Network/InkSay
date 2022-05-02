@@ -53,21 +53,24 @@ object SystemUI : BaseHook() {
         findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val viewGroup = methodHookParam.thisObject as ViewGroup
             context = viewGroup.context
+            viewGroup.setBackgroundColor(Color.BLACK)
             init(context!!,viewGroup)
         }
-        if (isNew()) {
+     //   if (isNew()) {
             findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
                 val viewGroup = methodHookParam.thisObject as ViewGroup
                 context = viewGroup.context
+                viewGroup.setBackgroundColor(Color.RED)
                 init(context!!, viewGroup)
             }
-        } else {
+      //  } else {
             findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
                 val viewGroup = methodHookParam.thisObject as ViewGroup
                 context = viewGroup.context
+                viewGroup.setBackgroundColor(Color.CYAN)
                 init(context!!, viewGroup)
             }
-        }
+       // }
 
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "updateLayout" }.hookAfter {
             if (context.isNotNull() && textView.isNotNull()) {
