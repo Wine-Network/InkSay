@@ -49,21 +49,23 @@ object SystemUI : BaseHook() {
             LogUtils.i("总开关未打开")
             return
         }
-        findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
-            val viewGroup = methodHookParam.thisObject as ViewGroup
-            context = viewGroup.context
-            init(context!!,viewGroup)
-        }
+
 //        findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
 //            val viewGroup = methodHookParam.thisObject as ViewGroup
 //            context = viewGroup.context
 //            init(context!!,viewGroup)
 //        }
-        if (isNew()){
+        if (isNew()) {
             findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
                 val viewGroup = methodHookParam.thisObject as ViewGroup
                 context = viewGroup.context
-                init(context!!,viewGroup)
+                init(context!!, viewGroup)
+            }
+        } else {
+            findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
+                val viewGroup = methodHookParam.thisObject as ViewGroup
+                context = viewGroup.context
+                init(context!!, viewGroup)
             }
         }
 
