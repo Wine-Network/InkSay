@@ -52,17 +52,13 @@ object SystemUI : BaseHook() {
             val viewGroup = methodHookParam.thisObject as ViewGroup
             context = viewGroup.context
             LogUtils.i(Utils.getDate())
-            if (Utils.getDate().toInt() >= 1647014400 &&
-                !Utils.getIncremental().endsWith("DEV") &&
-                !Utils.getIncremental().endsWith("XM")) return@hookAfter
+            if (Utils.getDate().toInt() >= 1647014400 && !Utils.getIncremental().endsWith("DEV") && !Utils.getIncremental().endsWith("XM")) return@hookAfter
             init(context!!, viewGroup)
         }
         findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val viewGroup = methodHookParam.thisObject as ViewGroup
             context = viewGroup.context
-            if (!(Utils.getDate().toInt() >= 1647014400 &&
-                        !Utils.getIncremental().endsWith("DEV") &&
-                        !Utils.getIncremental().endsWith("XM"))) return@hookAfter
+            if (!(Utils.getDate().toInt() >= 1647014400 && !Utils.getIncremental().endsWith("DEV") && !Utils.getIncremental().endsWith("XM"))) return@hookAfter
             val bigTimeId = context!!.resources.getIdentifier("big_time", "id", context!!.packageName)
             val bigTime: TextView = viewGroup.findViewById(bigTimeId)
             val dateTimeId = context!!.resources.getIdentifier("date_time", "id", context!!.packageName)
