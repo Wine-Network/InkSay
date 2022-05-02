@@ -54,11 +54,11 @@ object SystemUI : BaseHook() {
             context = viewGroup.context
             init(context!!,viewGroup)
         }
-        findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
-            val viewGroup = methodHookParam.thisObject as ViewGroup
-            context = viewGroup.context
-            init(context!!,viewGroup)
-        }
+//        findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
+//            val viewGroup = methodHookParam.thisObject as ViewGroup
+//            context = viewGroup.context
+//            init(context!!,viewGroup)
+//        }
         if (isNew()){
             findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
                 val viewGroup = methodHookParam.thisObject as ViewGroup
@@ -69,7 +69,6 @@ object SystemUI : BaseHook() {
 
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "updateLayout" }.hookAfter {
             if (context.isNotNull() && textView.isNotNull()) {
-                LogUtils.i(context!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE)
                 textView!!.visibility = if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) View.GONE else View.VISIBLE
             }
         }
