@@ -30,6 +30,7 @@ class SettingActivity : MIUIActivity() {
                 TextWithSwitch(TextV(resId = R.string.Switch), SwitchV("Switch", false))
                 TextSummaryArrow(TextSummaryV(textId = R.string.update, onClickListener = {
                     activity.sendBroadcast(Intent().apply { action = "InkSay_Server" })
+                    ActivityUtils.showToast(activity,"开始刷新")
                 }))
                 Text(resId = R.string.UpdateInterval, onClickListener = {
                     MIUIDialog(activity) {

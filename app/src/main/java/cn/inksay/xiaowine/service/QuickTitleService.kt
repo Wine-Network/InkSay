@@ -23,15 +23,10 @@
 package cn.inksay.xiaowine.service
 
 import android.content.Intent
-import android.graphics.drawable.Icon
-import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import cn.inksay.xiaowine.R
-import cn.inksay.xiaowine.config.Config
-import cn.inksay.xiaowine.utils.Utils
+import cn.inksay.xiaowine.utils.ActivityUtils
 
 class QuickTitleService : TileService() {
-    private lateinit var tile: Tile
 
     override fun onClick() {
         super.onClick()
@@ -39,6 +34,7 @@ class QuickTitleService : TileService() {
 //        config?.setLyricService(!config.getLyricService())
 //        config?.let { set(it) }
         application.sendBroadcast(Intent().apply { action = "InkSay_Server" })
+        ActivityUtils.showToast(application,"开始刷新")
     }
 
 //    fun set(config: Config) {
