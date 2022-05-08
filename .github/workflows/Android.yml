@@ -85,6 +85,7 @@ jobs:
         with:
           name: InkSay_release_mapping
           path: ./app/build/outputs/mapping/release/mapping.txt
+          run: echo ${{ steps.sign_release.outputs.signedReleaseFile }}
 #
 #      - name: Post to channel
 #        if: contains(github.event.head_commit.message, '[skip post]') == false
