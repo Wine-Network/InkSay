@@ -25,13 +25,13 @@ import java.util.*
 @SuppressLint("StaticFieldLeak")
 object NewSystemUI : BaseHook() {
 
-    private var sayText = ""
+    private var sayText = "123"
     private var context: Context? = null
-    private var ViewGroupList: List<ViewGroup> = listOf()
-    private var TextViewList: List<TextView> = listOf()
+    private var ViewGroupList: ArrayList<ViewGroup> = arrayListOf()
+    private var TextViewList: ArrayList<TextView> = arrayListOf()
     private var isRegister: Boolean = false
     private lateinit var updateTextHandler: Handler
-    private val inkSayReceiver by lazy { SystemUI.InkSayReceiver() }
+    private val inkSayReceiver by lazy { InkSayReceiver() }
 
     override fun init() {
         updateTextHandler = Handler(Looper.getMainLooper()) {
@@ -53,19 +53,22 @@ object NewSystemUI : BaseHook() {
         findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val qsViewGroup = methodHookParam.thisObject as ViewGroup
             context = qsViewGroup.context
-            ViewGroupList.plus(qsViewGroup)
+            ViewGroupList.add(qsViewGroup)
+            initView()
             registerBroadcast()
         }
         findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val notificationViewGroup = methodHookParam.thisObject as ViewGroup
             context = notificationViewGroup.context
-            ViewGroupList.plus(notificationViewGroup)
+            ViewGroupList.add(notificationViewGroup)
+            initView()
             registerBroadcast()
         }
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
             val miuiQSViewGroup = methodHookParam.thisObject as ViewGroup
             context = miuiQSViewGroup.context
-            ViewGroupList.plus(miuiQSViewGroup)
+            ViewGroupList.add(miuiQSViewGroup)
+            initView()
             registerBroadcast()
         }
 
@@ -73,12 +76,11 @@ object NewSystemUI : BaseHook() {
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "updateLayout" }.hookAfter {
 
         }
-        if (isInit){
-            initView()
+        if (!isInit) {
             UpdateTask().cancel()
+            LogUtils.i(XposedOwnSP.config.getUpdateInterval() * 1000)
             if (XposedOwnSP.config.getUpdateInterval() != 0) {
-                LogUtils.i(XposedOwnSP.config.getUpdateInterval() * 1000)
-                Timer().scheduleAtFixedRate(SystemUI.UpdateTask(), 0, (XposedOwnSP.config.getUpdateInterval() * 1000).toLong())
+                Timer().scheduleAtFixedRate(UpdateTask(), 0, (XposedOwnSP.config.getUpdateInterval() * 1000).toLong())
                 LogUtils.i("开始任务")
             }
         }
@@ -86,6 +88,7 @@ object NewSystemUI : BaseHook() {
 
     private fun registerBroadcast() {
         if (!isRegister) {
+        getDateUpdate()
             runCatching { context?.unregisterReceiver(inkSayReceiver) }
             context?.registerReceiver(inkSayReceiver, IntentFilter().apply { addAction("InkSay_Server") })
             isRegister = true
@@ -103,7 +106,7 @@ object NewSystemUI : BaseHook() {
                     setTextColor(Color.WHITE)
                     layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also { it.setMargins(0, Utils.dp2px(context, 20f), 0, 0) }
                 }
-                TextViewList.plus(textView)
+                TextViewList.add(textView)
                 view.addView(textView)
             }
         }
@@ -111,15 +114,15 @@ object NewSystemUI : BaseHook() {
 
     fun getDateUpdate() {
         Thread {
-            if (TextViewList.isEmpty()) {
+            if (TextViewList.isNotEmpty()) {
+                LogUtils.i("获取一言")
+                val request = ActivityUtils.getHttp("https://v1.hitokoto.cn/?encode=text")
+                sayText = request ?: "大海中的麻子：无处可寻"
+                updateTextHandler.sendMessage(updateTextHandler.obtainMessage())
+                LogUtils.i(if (request.isNull()) "获取失败" else "发送刷新:${sayText}")
+            } else {
                 LogUtils.i("textView未初始化，跳过获取")
-                return@Thread
             }
-            LogUtils.i("获取一言")
-            val request = ActivityUtils.getHttp("https://v1.hitokoto.cn/?encode=text")
-            sayText = request ?: "大海中的麻子：无处可寻"
-            updateTextHandler.sendMessage(updateTextHandler.obtainMessage())
-            LogUtils.i(if (request.isNull()) "获取失败" else "发送刷新:${sayText}")
         }.start()
     }
 
@@ -133,7 +136,7 @@ object NewSystemUI : BaseHook() {
     class InkSayReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             LogUtils.i("收到广播，开始刷新")
-            SystemUI.getDateUpdate()
+            getDateUpdate()
         }
     }
 
