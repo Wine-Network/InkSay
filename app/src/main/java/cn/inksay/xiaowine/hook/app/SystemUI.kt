@@ -28,8 +28,14 @@ import java.util.*
 @SuppressLint("StaticFieldLeak")
 object SystemUI : BaseHook() {
 
-    @SuppressLint("StaticFieldLeak") var textView: TextView? = null
-    private var context: Context? = null
+    @SuppressLint("StaticFieldLeak")
+    var textView: TextView? = null
+    private var context1: Context? = null
+    private var context2: Context? = null
+    private var context3: Context? = null
+    private var viewGroup1: ViewGroup? = null
+    private var viewGroup2: ViewGroup? = null
+    private var viewGroup3: ViewGroup? = null
     private var updateTextHandler: Handler? = null
     private var waitUpdate = false
     private var sayText = ""
@@ -51,30 +57,30 @@ object SystemUI : BaseHook() {
         }
 
         findMethod("com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
-            val viewGroup = methodHookParam.thisObject as ViewGroup
-            context = viewGroup.context
-            viewGroup.setBackgroundColor(Color.BLACK)
-            init(context!!,viewGroup)
+            viewGroup1 = methodHookParam.thisObject as ViewGroup
+            context1 = viewGroup1!!.context
+            viewGroup1!!.setBackgroundColor(Color.BLACK)
+            init(context1!!,viewGroup1!!)
         }
      //   if (isNew()) {
             findMethod("com.android.systemui.qs.MiuiNotificationHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
-                val viewGroup = methodHookParam.thisObject as ViewGroup
-                context = viewGroup.context
-                viewGroup.setBackgroundColor(Color.RED)
-                init(context!!, viewGroup)
+                viewGroup2 = methodHookParam.thisObject as ViewGroup
+                context2= viewGroup2!!.context
+                viewGroup2!!.setBackgroundColor(Color.BLACK)
+                init(context2!!,viewGroup2!!)
             }
       //  } else {
             findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "onFinishInflate" }.hookAfter { methodHookParam ->
-                val viewGroup = methodHookParam.thisObject as ViewGroup
-                context = viewGroup.context
-                viewGroup.setBackgroundColor(Color.CYAN)
-                init(context!!, viewGroup)
+                viewGroup3 = methodHookParam.thisObject as ViewGroup
+                context3 = viewGroup3!!.context
+                viewGroup3!!.setBackgroundColor(Color.BLACK)
+                init(context3!!,viewGroup3!!)
             }
        // }
 
         findMethod("com.android.systemui.qs.MiuiQSHeaderView") { name == "updateLayout" }.hookAfter {
-            if (context.isNotNull() && textView.isNotNull()) {
-                textView!!.visibility = if (context!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) View.GONE else View.VISIBLE
+            if (textView.isNotNull()) {
+                textView!!.visibility = if (context1!!.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) View.GONE else View.VISIBLE
             }
         }
         UpdateTask().cancel()
@@ -85,21 +91,21 @@ object SystemUI : BaseHook() {
         }
     }
 
-    fun initView(context: Context, viewGroup: ViewGroup) {
-        if (!(Utils.getDate().toInt() >= 1647014400 && !Utils.getIncremental().endsWith("DEV") && !Utils.getIncremental().endsWith("XM"))) {
-            val bigTimeId = context.resources.getIdentifier("big_time", "id", context.packageName)
-            val bigTime: TextView = viewGroup.findViewById(bigTimeId)
-            val dateTimeId = context.resources.getIdentifier("date_time", "id", context.packageName)
-            val dateTime: TextView = viewGroup.findViewById(dateTimeId)
-            viewGroup.removeView(bigTime)
-            viewGroup.removeView(dateTime)
-            init(context, viewGroup)
-            viewGroup.addView(bigTime)
-            viewGroup.addView(dateTime)
-        } else {
-            init(context, viewGroup)
-        }
-    }
+//    fun initView(context: Context, viewGroup: ViewGroup) {
+//        if (!(Utils.getDate().toInt() >= 1647014400 && !Utils.getIncremental().endsWith("DEV") && !Utils.getIncremental().endsWith("XM"))) {
+//            val bigTimeId = context.resources.getIdentifier("big_time", "id", context.packageName)
+//            val bigTime: TextView = viewGroup.findViewById(bigTimeId)
+//            val dateTimeId = context.resources.getIdentifier("date_time", "id", context.packageName)
+//            val dateTime: TextView = viewGroup.findViewById(dateTimeId)
+//            viewGroup.removeView(bigTime)
+//            viewGroup.removeView(dateTime)
+//            init(context, viewGroup)
+//            viewGroup.addView(bigTime)
+//            viewGroup.addView(dateTime)
+//        } else {
+//            init(context, viewGroup)
+//        }
+//    }
 
     private fun init(context: Context, viewGroup: ViewGroup) {
         textView = TextView(context).apply {

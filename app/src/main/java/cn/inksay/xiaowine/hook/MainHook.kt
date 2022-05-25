@@ -1,6 +1,6 @@
 package cn.inksay.xiaowine.hook
 
-import cn.inksay.xiaowine.hook.app.SystemUI
+import cn.inksay.xiaowine.hook.app.NewSystemUI
 import cn.inksay.xiaowine.utils.LogUtils
 import com.github.kyuubiran.ezxhelper.init.EzXHelperInit
 import com.github.kyuubiran.ezxhelper.utils.Log
@@ -20,7 +20,7 @@ class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit /* Optional */ {
             EzXHelperInit.initHandleLoadPackage(lpparam)
             EzXHelperInit.setLogTag(TAG)
             EzXHelperInit.setToastTag(TAG)
-            initHooks(SystemUI)
+            initHooks(NewSystemUI)
         }
     }
 
