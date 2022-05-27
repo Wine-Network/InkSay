@@ -71,7 +71,7 @@ object ActivityUtils {
     @Suppress("DEPRECATION") fun showToast(context: Context, message: String) {
         try {
             handler.post {
-                XToast.makeText(context, ">墨•言：${message}", toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
+                XToast.makeText(context, "墨•言：${message}", toastIcon = context.resources.getDrawable(R.mipmap.ic_launcher_round)).show()
             }
         } catch (e: RuntimeException) {
             e.printStackTrace()

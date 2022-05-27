@@ -68,5 +68,7 @@ class Config {
     fun setUpdateInterval(i: Int) {
         return config.put("UpdateInterval", i)
     }
-
+    fun getAutoHide(): Boolean {
+        return config.optBoolean("AutoHide", true)
+    }
 }

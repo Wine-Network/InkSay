@@ -8,6 +8,7 @@ import android.os.Bundle
 import cn.fkj233.ui.activity.MIUIActivity
 import cn.fkj233.ui.activity.view.SwitchV
 import cn.fkj233.ui.activity.view.TextSummaryV
+import cn.fkj233.ui.activity.view.TextSummaryWithSwitchV
 import cn.fkj233.ui.activity.view.TextV
 import cn.fkj233.ui.dialog.MIUIDialog
 import cn.inksay.xiaowine.BuildConfig
@@ -28,9 +29,8 @@ class SettingActivity : MIUIActivity() {
         initView {
             registerMain(getString(R.string.App_name), false) {
                 TextWithSwitch(TextV(resId = R.string.Switch), SwitchV("Switch", false))
-                TextSummaryArrow(TextSummaryV(textId = R.string.update, onClickListener = {
-                    activity.sendBroadcast(Intent().apply { action = "InkSay_Server" })
-                    ActivityUtils.showToast(activity,"开始刷新")
+                TextSummaryArrow(TextSummaryV(textId = R.string.update, onClickListener = { activity.sendBroadcast(Intent().apply { action = "InkSay_Server" })
+                    ActivityUtils.showToast(activity, "开始刷新")
                 }))
                 Text(resId = R.string.UpdateInterval, onClickListener = {
                     MIUIDialog(activity) {
@@ -59,6 +59,7 @@ class SettingActivity : MIUIActivity() {
                     }.show()
                 })
                 SeekBarWithText("UpdateInterval", 0, 1440, defaultProgress = 60)
+                TextWithSwitch(TextV(resId = R.string.AutoHide), SwitchV("AutoHide",true))
                 Line()
 //                TextWithSwitch(TextV(resId = R.string.IsToast), SwitchV("IsToast", true))
                 TextWithSwitch(TextV(resId = R.string.HideDeskIcon), SwitchV("HLauncherIcon", customOnCheckedChangeListener = {
